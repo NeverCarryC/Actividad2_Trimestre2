@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de gestión de trabajadores</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS styles */
+        .container {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="text-center">Sistema de gestión de trabajadores</h1>
+
+        <div class="row">
+            <!-- Parte izquierda: Formulario de ingreso de datos -->
+            <div class="col-md-6">
+                <h3>Ingrese los datos del nuevo trabajador:</h3>
+                <form id="workerForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" class="form-control" id="apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo">Correo electrónico:</label>
+                        <input type="email" class="form-control" id="correo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento">Departamento:</label>
+                        <select class="form-control" id="departamento">
+                            <option value="IT">IT</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Ventas">Ventas</option>
+                            <option value="Administración">Administración</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agregar Trabajador</button>
+                </form>
+            </div>
+
+            <!-- Parte derecha: Lista de trabajadores -->
+            <div class="col-md-6">
+                <h3>Lista de Trabajadores:</h3>
+                <ul id="workerList" class="list-group"></ul>
+            </div>
+        </div>
+
+        <!-- Parte inferior: Resumen de trabajadores por departamento -->
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h3>Resumen de Trabajadores por Departamento:</h3>
+                <div id="summary"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // JavaScript code for dynamic functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize empty array to store workers
+            var workers = [];
+
+            // Function to add new worker to the list
+            function addWorker(nombre, apellido, correo, departamento) {
+                var worker = {
+                    nombre: nombre,
+                    apellido: apellido,
+                    correo: correo,
+                    departamento: departamento
+                };
+                workers.push(worker);
+                updateWorkerList();
+                updateSummary();
+            }
+
+            // Function to update worker list
+            function updateWorkerList() {
+                var list = document.getElementById('workerList');
+                list.innerHTML = '';
+                workers.forEach(function (worker) {
+                    var listItem = document.createElement('li');
+                    listItem.className = 'list-group-item';
+                    listItem.textContent = worker.nombre + ' ' + worker.apellido;
+                    list.appendChild(listItem);
+                });
+            }
+
+            // Function to update summary of workers by department
+            function updateSummary() {
+                var summary = {};
+                workers.forEach(function (worker) {
+                    summary[worker.departamento] = (summary[worker.departamento] || 0) + 1;
+                });
+                var summaryDiv = document.getElementById('summary');
+                summaryDiv.innerHTML = '';
+                for (var dept in summary) {
+                    var para = document.createElement('p');
+                    para.textContent = dept + ': ' + summary[dept];
+                    summaryDiv.appendChild(para);
+                }
+            }
+
+            // Submit event handler for worker form
+            document.getElementById('workerForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                var nombre = document.getElementById('nombre').value;
+                var apellido = document.getElementById('apellido').value;
+                var correo = document.getElementById('correo').value;
+                var departamento = document.getElementById('departamento').value;
+                addWorker(nombre, apellido, correo, departamento);
+                // Clear form inputs
+                document.getElementById('nombre').value = '';
+                document.getElementById('apellido').value = '';
+                document.getElementById('correo').value = '';
+            });
+        });
+    </script>
+
+</body>
+
+</html>
